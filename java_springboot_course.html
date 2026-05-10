@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Java & Spring Boot — Full Course</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0f1a;
+  --surface:#111827;
+  --surface2:#1a2235;
+  --border:#1e2d45;
+  --accent:#00d4aa;
+  --accent2:#3b82f6;
+  --accent3:#f59e0b;
+  --accent4:#ec4899;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --code-bg:#070c14;
+  --green:#10b981;
+  --purple:#8b5cf6;
+  --red:#ef4444;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Sora',sans-serif;
+  font-size:15px;
+  line-height:1.7;
+  min-height:100vh;
+}
+
+/* ---- LAYOUT ---- */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{
+  width:280px;
+  min-width:280px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.main{flex:1;overflow-y:auto;position:relative}
+
+/* ---- SIDEBAR ---- */
+.sidebar-header{
+  padding:24px 20px 16px;
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-family:'JetBrains Mono',monospace;
+}
+.logo span{color:var(--accent2)}
+.sidebar-title{font-size:18px;font-weight:700;margin-top:6px;line-height:1.2}
+.progress-bar-wrap{margin-top:12px}
+.progress-label{font-size:11px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
+.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .5s ease}
+
+.nav{flex:1;overflow-y:auto;padding:12px 10px}
+.nav::-webkit-scrollbar{width:4px}
+.nav::-webkit-scrollbar-track{background:transparent}
+.nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.phase-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);padding:14px 10px 6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;cursor:pointer;
+  font-size:13px;transition:all .15s;position:relative;
+  border:1px solid transparent;margin-bottom:2px;
+}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--surface2);border-color:var(--border);color:var(--accent)}
+.nav-item.done .nav-check{background:var(--green);border-color:var(--green);color:#fff}
+.nav-check{
+  width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;flex-shrink:0;transition:all .2s;
+  font-family:'JetBrains Mono',monospace;
+}
+.nav-num{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+
+/* ---- CONTENT ---- */
+.content{max-width:820px;margin:0 auto;padding:40px 48px 80px}
+.lesson-header{margin-bottom:36px}
+.phase-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;margin-bottom:12px;
+}
+.lesson-title{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:10px}
+.lesson-subtitle{font-size:15px;color:var(--muted);line-height:1.6}
+
+/* ---- SECTIONS ---- */
+.section{margin-bottom:40px}
+.section-title{
+  font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ---- CODE ---- */
+.code-block{
+  background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;margin:16px 0;
+  font-family:'JetBrains Mono',monospace;
+}
+.code-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;border-bottom:1px solid var(--border);
+  background:#0d1320;
+}
+.code-lang{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.code-dots{display:flex;gap:6px}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.code-body{padding:20px;overflow-x:auto;font-size:13px;line-height:1.8;tab-size:2}
+.code-body::-webkit-scrollbar{height:4px}
+.code-body::-webkit-scrollbar-thumb{background:var(--border)}
+/* syntax colors */
+.kw{color:#c084fc} /* keywords */
+.cl{color:#67e8f9} /* class/type */
+.fn{color:#86efac} /* function */
+.st{color:#fca5a5} /* string */
+.cm{color:#475569;font-style:italic} /* comment */
+.an{color:#fbbf24} /* annotation */
+.nm{color:#a5b4fc} /* number/const */
+.op{color:#94a3b8} /* operator */
+
+/* ---- CARDS ---- */
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:16px;
+}
+.card-title{font-size:13px;font-weight:700;margin-bottom:6px}
+.card-body{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ---- INFO BOX ---- */
+.info-box{
+  background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);
+  border-radius:10px;padding:16px 20px;margin:16px 0;
+  font-size:13px;line-height:1.7;
+}
+.info-box.yellow{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.25)}
+.info-box.blue{background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.25)}
+.info-box.red{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.25)}
+.info-icon{font-size:16px;margin-right:6px}
+
+/* ---- TABLE ---- */
+.table-wrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface2);padding:10px 14px;text-align:left;font-weight:700;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td{padding:10px 14px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--accent)}
+
+/* ---- STEPS ---- */
+.steps{counter-reset:step;margin:16px 0}
+.step{
+  display:flex;gap:16px;margin-bottom:20px;align-items:flex-start;
+}
+.step-num{
+  min-width:30px;height:30px;border-radius:50%;background:var(--accent);color:#000;
+  font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;flex-shrink:0;margin-top:2px;
+}
+.step-content{flex:1}
+.step-title{font-weight:700;font-size:14px;margin-bottom:4px}
+.step-body{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ---- QUIZ ---- */
+.quiz{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:24px;margin:24px 0;
+}
+.quiz-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}
+.quiz-q{font-size:15px;font-weight:600;margin-bottom:16px;line-height:1.5}
+.quiz-options{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:8px;padding:12px 16px;cursor:pointer;font-size:13px;
+  transition:all .15s;display:flex;align-items:center;gap:10px;
+}
+.quiz-opt:hover{border-color:var(--accent2);background:rgba(59,130,246,.06)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(16,185,129,.08);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.06);color:var(--red)}
+.quiz-opt.disabled{cursor:default;pointer-events:none}
+.quiz-feedback{margin-top:14px;font-size:13px;padding:12px 16px;border-radius:8px;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:var(--green)}
+.quiz-feedback.fail{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+
+/* ---- PROJECT BOX ---- */
+.project{
+  background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(59,130,246,.06));
+  border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:24px;margin:24px 0;
+}
+.project-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:8px}
+.project-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.project-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.project-steps{list-style:none}
+.project-steps li{
+  font-size:13px;padding:6px 0 6px 20px;position:relative;color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
+.project-steps li::before{content:'→';position:absolute;left:0;color:var(--purple)}
+.project-steps li:last-child{border:none}
+
+/* ---- NAV BUTTONS ---- */
+.lesson-nav{
+  display:flex;gap:12px;margin-top:48px;padding-top:24px;
+  border-top:1px solid var(--border);
+}
+.btn{
+  padding:12px 24px;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Sora',sans-serif;transition:all .15s;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:#00f0c0;transform:translateY(-1px)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ---- HIGHLIGHT ---- */
+.tag{display:inline-block;background:rgba(0,212,170,.1);color:var(--accent);padding:2px 8px;border-radius:4px;font-size:12px;font-family:'JetBrains Mono',monospace;margin:2px}
+
+/* ---- HERO ---- */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 40%,rgba(0,212,170,.07),transparent),
+             radial-gradient(ellipse 60% 40% at 80% 70%,rgba(59,130,246,.06),transparent);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.hero-content{position:relative;z-index:1;max-width:680px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);
+  border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;
+  letter-spacing:.06em;color:var(--accent);text-transform:uppercase;margin-bottom:24px;
+}
+.hero h1{font-size:52px;font-weight:800;line-height:1.08;margin-bottom:16px}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:32px}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-bottom:32px}
+.stat{text-align:center}
+.stat-num{font-size:28px;font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace}
+.stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* ---- SCROLLBAR ---- */
+.main::-webkit-scrollbar{width:5px}
+.main::-webkit-scrollbar-track{background:transparent}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ---- HIDDEN ---- */
+.lesson-page{display:none}
+.lesson-page.active{display:block}
+#home-page{display:block}
+
+@media(max-width:768px){
+  .sidebar{width:220px;min-width:220px}
+  .content{padding:24px 20px 60px}
+  .hero h1{font-size:32px}
+  .card-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">Java<span>+</span>Spring</div>
+    <div class="sidebar-title">Full Course</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span>Progress</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <nav class="nav" id="nav-list"></nav>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="main" id="main">
+
+<!-- HOME -->
+<div id="home-page">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">⚡ Full Professional Course</div>
+      <h1>Master <span>Java</span> &<br/>Spring Boot</h1>
+      <p>From zero to job-ready. Learn Core Java, REST APIs, databases, security, testing, Docker, and real projects — all in one place.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">9</div><div class="stat-label">Lessons</div></div>
+        <div class="stat"><div class="stat-num">4</div><div class="stat-label">Projects</div></div>
+        <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Career Value</div></div>
+      </div>
+      <button class="btn btn-primary" style="margin:0 auto;font-size:15px;padding:14px 32px" onclick="goTo(0)">Start Learning →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LESSONS injected by JS -->
+<div id="lessons-container"></div>
+
+</main>
+</div>
+
+<script>
+const LESSONS = [
+{
+  id:'java-oop',
+  phase:'Phase 1 — Core Java',
+  phaseColor:'#8b5cf6',
+  title:'OOP in Java',
+  subtitle:'Master the 4 pillars that everything in Spring Boot is built on.',
+  html:`
+  <div class="section">
+    <div class="section-title">What is OOP?</div>
+    <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:16px">Object-Oriented Programming organizes code into <strong style="color:var(--text)">objects</strong> that have data (fields) and behavior (methods). Java is 100% OOP — and Spring Boot builds on top of it entirely.</p>
+    <div class="card-grid">
+      <div class="card"><div class="card-title" style="color:#c084fc">Encapsulation</div><div class="card-body">Hide data inside a class. Only expose what's needed via getters/setters.</div></div>
+      <div class="card"><div class="card-title" style="color:#67e8f9">Inheritance</div><div class="card-body">Child class gets the parent's fields and methods. Promotes code reuse.</div></div>
+      <div class="card"><div class="card-title" style="color:#86efac">Polymorphism</div><div class="card-body">Same method name, different behavior. Override methods in child classes.</div></div>
+      <div class="card"><div class="card-title" style="color:#fbbf24">Abstraction</div><div class="card-body">Show only "what" not "how". Use interfaces & abstract classes.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Encapsulation</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="kw">public class</span> <span class="cl">BankAccount</span> {
+    <span class="kw">private double</span> balance; <span class="cm">// hidden from outside</span>
+
+    <span class="kw">public</span> <span class="fn">BankAccount</span>(<span class="kw">double</span> initialBalance) {
+        <span class="kw">this</span>.balance = initialBalance;
+    }
+
+    <span class="kw">public double</span> <span class="fn">getBalance</span>() { <span class="kw">return</span> balance; }
+
+    <span class="kw">public void</span> <span class="fn">deposit</span>(<span class="kw">double</span> amount) {
+        <span class="kw">if</span> (amount &gt; <span class="nm">0</span>) balance += amount;
+    }
+
+    <span class="kw">public void</span> <span class="fn">withdraw</span>(<span class="kw">double</span> amount) {
+        <span class="kw">if</span> (amount &gt; balance) <span class="kw">throw new</span> <span class="cl">RuntimeException</span>(<span class="st">"Insufficient funds"</span>);
+        balance -= amount;
+    }
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Inheritance & Polymorphism</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="kw">public class</span> <span class="cl">Animal</span> {
+    <span class="kw">public</span> <span class="fn">String</span> <span class="fn">speak</span>() { <span class="kw">return</span> <span class="st">"..."</span>; }
+}
+
+<span class="kw">public class</span> <span class="cl">Dog</span> <span class="kw">extends</span> <span class="cl">Animal</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="cl">String</span> <span class="fn">speak</span>() { <span class="kw">return</span> <span class="st">"Woof!"</span>; }
+}
+
+<span class="kw">public class</span> <span class="cl">Cat</span> <span class="kw">extends</span> <span class="cl">Animal</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="cl">String</span> <span class="fn">speak</span>() { <span class="kw">return</span> <span class="st">"Meow!"</span>; }
+}
+
+<span class="cm">// Polymorphism in action:</span>
+<span class="cl">Animal</span>[] animals = { <span class="kw">new</span> <span class="cl">Dog</span>(), <span class="kw">new</span> <span class="cl">Cat</span>() };
+<span class="kw">for</span> (<span class="cl">Animal</span> a : animals) {
+    <span class="cl">System</span>.out.<span class="fn">println</span>(a.<span class="fn">speak</span>()); <span class="cm">// Woof! then Meow!</span>
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Abstraction with Interfaces</div>
+    <div class="info-box">💡 <strong>Interfaces are everywhere in Spring Boot.</strong> @Service classes implement interfaces, repositories extend JpaRepository, etc.</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="kw">public interface</span> <span class="cl">PaymentService</span> {
+    <span class="kw">void</span> <span class="fn">pay</span>(<span class="kw">double</span> amount); <span class="cm">// just the "what"</span>
+}
+
+<span class="kw">public class</span> <span class="cl">StripePaymentService</span> <span class="kw">implements</span> <span class="cl">PaymentService</span> {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">pay</span>(<span class="kw">double</span> amount) {
+        <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Paying $"</span> + amount + <span class="st">" via Stripe"</span>);
+    }
+}</pre></div></div>
+  </div>
+`,
+  quiz:{q:'Which OOP concept hides internal data and only exposes it through methods?',opts:['Inheritance','Polymorphism','Encapsulation','Abstraction'],ans:2,exp:'Encapsulation keeps fields private and provides public getters/setters to control access.'}
+},
+
+{
+  id:'java-collections',
+  phase:'Phase 1 — Core Java',
+  phaseColor:'#8b5cf6',
+  title:'Collections & Lambdas',
+  subtitle:'The data structures and modern syntax you will use in every Spring Boot project.',
+  html:`
+  <div class="section">
+    <div class="section-title">The Main Collections</div>
+    <div class="table-wrap"><table>
+      <tr><th>Type</th><th>Class</th><th>Use When</th></tr>
+      <tr><td><code>List</code></td><td><code>ArrayList</code></td><td>Ordered, allows duplicates</td></tr>
+      <tr><td><code>Set</code></td><td><code>HashSet</code></td><td>No duplicates</td></tr>
+      <tr><td><code>Map</code></td><td><code>HashMap</code></td><td>Key → Value pairs</td></tr>
+      <tr><td><code>Queue</code></td><td><code>LinkedList</code></td><td>FIFO order</td></tr>
+    </table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">List — Most Common</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="cl">List</span>&lt;<span class="cl">String</span>&gt; names = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+names.<span class="fn">add</span>(<span class="st">"Ali"</span>);
+names.<span class="fn">add</span>(<span class="st">"Sara"</span>);
+names.<span class="fn">add</span>(<span class="st">"Ahmed"</span>);
+
+<span class="cm">// Classic loop</span>
+<span class="kw">for</span> (<span class="cl">String</span> name : names) {
+    <span class="cl">System</span>.out.<span class="fn">println</span>(name);
+}
+
+<span class="cm">// Modern Lambda way (you'll use this in Spring Boot)</span>
+names.<span class="fn">forEach</span>(name -> <span class="cl">System</span>.out.<span class="fn">println</span>(name));
+
+<span class="cm">// Filter with Stream</span>
+<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; aNames = names.<span class="fn">stream</span>()
+    .<span class="fn">filter</span>(n -> n.<span class="fn">startsWith</span>(<span class="st">"A"</span>))
+    .<span class="fn">collect</span>(<span class="cl">Collectors</span>.<span class="fn">toList</span>());
+<span class="cm">// Result: ["Ali", "Ahmed"]</span></pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Map — Key/Value</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="cl">Map</span>&lt;<span class="cl">String</span>, <span class="cl">Integer</span>&gt; scores = <span class="kw">new</span> <span class="cl">HashMap</span>&lt;&gt;();
+scores.<span class="fn">put</span>(<span class="st">"Ali"</span>, <span class="nm">95</span>);
+scores.<span class="fn">put</span>(<span class="st">"Sara"</span>, <span class="nm">88</span>);
+
+<span class="cm">// Access</span>
+<span class="kw">int</span> aliScore = scores.<span class="fn">get</span>(<span class="st">"Ali"</span>); <span class="cm">// 95</span>
+
+<span class="cm">// Loop through map</span>
+scores.<span class="fn">forEach</span>((name, score) ->
+    <span class="cl">System</span>.out.<span class="fn">println</span>(name + <span class="st">": "</span> + score)
+);</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Lambdas & Streams</div>
+    <div class="info-box blue">🚀 <strong>Spring Boot uses Streams constantly</strong> — when processing lists of users, filtering results, transforming data between layers.</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="cl">List</span>&lt;<span class="cl">Integer</span>&gt; numbers = <span class="cl">List</span>.<span class="fn">of</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>,<span class="nm">7</span>,<span class="nm">8</span>,<span class="nm">9</span>,<span class="nm">10</span>);
+
+<span class="cm">// Get even numbers, doubled, sorted</span>
+<span class="cl">List</span>&lt;<span class="cl">Integer</span>&gt; result = numbers.<span class="fn">stream</span>()
+    .<span class="fn">filter</span>(n -> n % <span class="nm">2</span> == <span class="nm">0</span>)       <span class="cm">// keep evens</span>
+    .<span class="fn">map</span>(n -> n * <span class="nm">2</span>)               <span class="cm">// double them</span>
+    .<span class="fn">sorted</span>()                       <span class="cm">// sort</span>
+    .<span class="fn">collect</span>(<span class="cl">Collectors</span>.<span class="fn">toList</span>()); <span class="cm">// back to list</span>
+<span class="cm">// Result: [4, 8, 12, 16, 20]</span></pre></div></div>
+  </div>
+`,
+  quiz:{q:'What does .filter() do in a Java Stream?',opts:['Sorts elements','Removes duplicates','Keeps only elements that match a condition','Converts list to a map'],ans:2,exp:'filter() takes a predicate (condition) and returns only the elements where the condition is true.'}
+},
+
+{
+  id:'java-exceptions',
+  phase:'Phase 1 — Core Java',
+  phaseColor:'#8b5cf6',
+  title:'Exception Handling',
+  subtitle:'Control errors gracefully — Spring Boot relies on this for every API error response.',
+  html:`
+  <div class="section">
+    <div class="section-title">Types of Exceptions</div>
+    <div class="card-grid">
+      <div class="card"><div class="card-title" style="color:#ef4444">Checked Exceptions</div><div class="card-body">Must be handled at compile time. e.g. IOException, SQLException</div></div>
+      <div class="card"><div class="card-title" style="color:#f59e0b">Unchecked Exceptions</div><div class="card-body">Runtime errors. e.g. NullPointerException, ArithmeticException</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Try-Catch-Finally</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="kw">try</span> {
+    <span class="kw">int</span> result = <span class="nm">10</span> / <span class="nm">0</span>; <span class="cm">// throws ArithmeticException</span>
+} <span class="kw">catch</span> (<span class="cl">ArithmeticException</span> e) {
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Math error: "</span> + e.<span class="fn">getMessage</span>());
+} <span class="kw">catch</span> (<span class="cl">Exception</span> e) {
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"Unknown error"</span>);
+} <span class="kw">finally</span> {
+    <span class="cl">System</span>.out.<span class="fn">println</span>(<span class="st">"This ALWAYS runs"</span>);
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Custom Exceptions (Used in Every Spring Boot Project)</div>
+    <div class="info-box">💡 In Spring Boot, you create custom exceptions like <code>UserNotFoundException</code> and Spring converts them to HTTP error responses automatically.</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="cm">// 1. Create custom exception</span>
+<span class="kw">public class</span> <span class="cl">UserNotFoundException</span> <span class="kw">extends</span> <span class="cl">RuntimeException</span> {
+    <span class="kw">public</span> <span class="fn">UserNotFoundException</span>(<span class="cl">String</span> message) {
+        <span class="kw">super</span>(message);
+    }
+}
+
+<span class="cm">// 2. Throw it in your service</span>
+<span class="kw">public</span> <span class="cl">User</span> <span class="fn">getUserById</span>(<span class="kw">Long</span> id) {
+    <span class="kw">return</span> userRepository.<span class="fn">findById</span>(id)
+        .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="cl">UserNotFoundException</span>(
+            <span class="st">"User with id "</span> + id + <span class="st">" not found"</span>
+        ));
+}</pre></div></div>
+  </div>
+`,
+  quiz:{q:'Which keyword is used to throw an exception manually?',opts:['raise','throw','throws','catch'],ans:1,exp:'"throw" is the keyword to manually throw an exception. "throws" is used in method signatures to declare what exceptions a method might throw.'}
+},
+
+{
+  id:'spring-setup',
+  phase:'Phase 2 — Spring Boot',
+  phaseColor:'#00d4aa',
+  title:'Spring Boot Setup & First API',
+  subtitle:'Create your first Spring Boot project and build a working REST API.',
+  html:`
+  <div class="section">
+    <div class="section-title">Create a Project in 30 Seconds</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Go to start.spring.io</div><div class="step-body">The official Spring Boot project generator. Select: Maven, Java, latest stable Spring Boot version.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Set Project Metadata</div><div class="step-body">Group: <span class="tag">com.myapp</span> &nbsp;Artifact: <span class="tag">myproject</span></div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Add Dependencies</div><div class="step-body">Click "ADD DEPENDENCIES" → add <strong>Spring Web</strong> + <strong>Spring Data JPA</strong> + <strong>H2 Database</strong></div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Generate & Open</div><div class="step-body">Click GENERATE, extract the zip, open in IntelliJ IDEA (recommended).</div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Project Structure</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Structure</span></div>
+      <div class="code-body"><pre>src/
+├── main/
+│   ├── java/com/myapp/
+│   │   ├── <span class="cl">MyprojectApplication.java</span>   <span class="cm">← entry point</span>
+│   │   ├── controller/                  <span class="cm">← handles HTTP requests</span>
+│   │   ├── service/                     <span class="cm">← business logic</span>
+│   │   ├── repository/                  <span class="cm">← database access</span>
+│   │   └── model/                       <span class="cm">← data classes</span>
+│   └── resources/
+│       └── <span class="an">application.properties</span>      <span class="cm">← config</span>
+└── test/</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Your First REST Controller</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/api/hello"</span>)
+<span class="kw">public class</span> <span class="cl">HelloController</span> {
+
+    <span class="an">@GetMapping</span>
+    <span class="kw">public</span> <span class="cl">String</span> <span class="fn">hello</span>() {
+        <span class="kw">return</span> <span class="st">"Hello, Spring Boot! 🚀"</span>;
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{name}"</span>)
+    <span class="kw">public</span> <span class="cl">String</span> <span class="fn">greet</span>(<span class="an">@PathVariable</span> <span class="cl">String</span> name) {
+        <span class="kw">return</span> <span class="st">"Hello, "</span> + name + <span class="st">"!"</span>;
+    }
+}
+<span class="cm">// Run app → open browser → localhost:8080/api/hello</span></pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Key Annotations Explained</div>
+    <div class="table-wrap"><table>
+      <tr><th>Annotation</th><th>Meaning</th></tr>
+      <tr><td><code>@RestController</code></td><td>This class handles HTTP requests and returns JSON</td></tr>
+      <tr><td><code>@RequestMapping</code></td><td>Base URL path for this controller</td></tr>
+      <tr><td><code>@GetMapping</code></td><td>Handle GET requests</td></tr>
+      <tr><td><code>@PostMapping</code></td><td>Handle POST requests (create)</td></tr>
+      <tr><td><code>@PutMapping</code></td><td>Handle PUT requests (update)</td></tr>
+      <tr><td><code>@DeleteMapping</code></td><td>Handle DELETE requests</td></tr>
+      <tr><td><code>@PathVariable</code></td><td>Get value from URL path: /users/{id}</td></tr>
+      <tr><td><code>@RequestBody</code></td><td>Get data from request body (JSON)</td></tr>
+    </table></div>
+  </div>
+`,
+  quiz:{q:'What does @RestController do?',opts:['Connects to database','Marks class as a Spring Bean','Handles HTTP requests and returns JSON directly','Handles security'],ans:2,exp:'@RestController = @Controller + @ResponseBody. It marks the class as handling HTTP requests and automatically serializes responses to JSON.'}
+},
+
+{
+  id:'spring-jpa',
+  phase:'Phase 2 — Spring Boot',
+  phaseColor:'#00d4aa',
+  title:'Spring Data JPA & Database',
+  subtitle:'Connect Spring Boot to a database and perform CRUD operations without writing SQL.',
+  html:`
+  <div class="section">
+    <div class="section-title">How it Works</div>
+    <div class="info-box">🗄️ Spring Data JPA maps your Java classes to database tables. You define the class, JPA creates the table. You call methods on a Repository, JPA writes the SQL.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">1. Entity (the Model)</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="an">@Entity</span>                    <span class="cm">// maps to a database table</span>
+<span class="an">@Table</span>(name = <span class="st">"users"</span>)
+<span class="kw">public class</span> <span class="cl">User</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="cl">GenerationType</span>.IDENTITY)
+    <span class="kw">private Long</span> id;
+
+    <span class="an">@Column</span>(nullable = <span class="kw">false</span>)
+    <span class="kw">private</span> <span class="cl">String</span> name;
+
+    <span class="an">@Column</span>(unique = <span class="kw">true</span>, nullable = <span class="kw">false</span>)
+    <span class="kw">private</span> <span class="cl">String</span> email;
+
+    <span class="kw">private</span> <span class="kw">int</span> age;
+
+    <span class="cm">// Getters & Setters (or use Lombok @Data)</span>
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. Repository</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="kw">public interface</span> <span class="cl">UserRepository</span>
+    <span class="kw">extends</span> <span class="cl">JpaRepository</span>&lt;<span class="cl">User</span>, <span class="cl">Long</span>&gt; {
+
+    <span class="cm">// JPA gives you these for FREE:</span>
+    <span class="cm">// findAll(), findById(), save(), delete(), count()</span>
+
+    <span class="cm">// Custom queries by method name:</span>
+    <span class="cl">List</span>&lt;<span class="cl">User</span>&gt; <span class="fn">findByName</span>(<span class="cl">String</span> name);
+    <span class="cl">Optional</span>&lt;<span class="cl">User</span>&gt; <span class="fn">findByEmail</span>(<span class="cl">String</span> email);
+    <span class="cl">List</span>&lt;<span class="cl">User</span>&gt; <span class="fn">findByAgeGreaterThan</span>(<span class="kw">int</span> age);
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. application.properties</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Properties</span></div>
+      <div class="code-body"><pre><span class="cm"># For H2 (in-memory, good for learning)</span>
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.h2.console.enabled=true
+
+<span class="cm"># For MySQL (production)</span>
+spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+spring.datasource.username=root
+spring.datasource.password=yourpassword
+
+spring.jpa.hibernate.ddl-auto=update  <span class="cm"># auto-create tables</span>
+spring.jpa.show-sql=true               <span class="cm"># see SQL in console</span></pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">SQL vs Spring Data JPA</div>
+    <div class="table-wrap"><table>
+      <tr><th>SQL</th><th>JPA Equivalent</th></tr>
+      <tr><td>SELECT * FROM users</td><td><code>userRepository.findAll()</code></td></tr>
+      <tr><td>SELECT * FROM users WHERE id=1</td><td><code>userRepository.findById(1L)</code></td></tr>
+      <tr><td>INSERT INTO users ...</td><td><code>userRepository.save(user)</code></td></tr>
+      <tr><td>UPDATE users SET ...</td><td><code>userRepository.save(updatedUser)</code></td></tr>
+      <tr><td>DELETE FROM users WHERE id=1</td><td><code>userRepository.deleteById(1L)</code></td></tr>
+    </table></div>
+  </div>
+`,
+  quiz:{q:'What does JpaRepository provide automatically?',opts:['Only findAll()','Only save() and delete()','CRUD methods like findAll, findById, save, delete','Only custom SQL queries'],ans:2,exp:'JpaRepository gives you all basic CRUD operations for free: findAll, findById, save, delete, count, and more — no implementation needed.'}
+},
+
+{
+  id:'spring-architecture',
+  phase:'Phase 3 — Intermediate',
+  phaseColor:'#3b82f6',
+  title:'Layered Architecture',
+  subtitle:'The professional structure every real Spring Boot app follows.',
+  html:`
+  <div class="section">
+    <div class="section-title">The 3 Layers</div>
+    <div class="info-box">🏗️ This is the most important concept for writing professional code. <strong>Never put business logic in controllers. Never access the database from controllers.</strong></div>
+    <div class="table-wrap"><table>
+      <tr><th>Layer</th><th>Class Type</th><th>Responsibility</th></tr>
+      <tr><td><strong style="color:#67e8f9">Controller</strong></td><td><code>@RestController</code></td><td>Handle HTTP. Call service. Return response.</td></tr>
+      <tr><td><strong style="color:#86efac">Service</strong></td><td><code>@Service</code></td><td>Business logic. Validate. Transform data.</td></tr>
+      <tr><td><strong style="color:#c084fc">Repository</strong></td><td><code>@Repository</code></td><td>Database access only.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Full Example — User CRUD API</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Controller Layer</span></div>
+      <div class="code-body"><pre><span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/api/users"</span>)
+<span class="kw">public class</span> <span class="cl">UserController</span> {
+
+    <span class="kw">private final</span> <span class="cl">UserService</span> userService;
+
+    <span class="kw">public</span> <span class="fn">UserController</span>(<span class="cl">UserService</span> userService) {
+        <span class="kw">this</span>.userService = userService;
+    }
+
+    <span class="an">@GetMapping</span>
+    <span class="kw">public</span> <span class="cl">List</span>&lt;<span class="cl">UserDTO</span>&gt; <span class="fn">getAllUsers</span>() {
+        <span class="kw">return</span> userService.<span class="fn">getAllUsers</span>();
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="kw">public</span> <span class="cl">UserDTO</span> <span class="fn">getUser</span>(<span class="an">@PathVariable</span> <span class="cl">Long</span> id) {
+        <span class="kw">return</span> userService.<span class="fn">getUserById</span>(id);
+    }
+
+    <span class="an">@PostMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="cl">HttpStatus</span>.CREATED)
+    <span class="kw">public</span> <span class="cl">UserDTO</span> <span class="fn">createUser</span>(<span class="an">@RequestBody</span> <span class="an">@Valid</span> <span class="cl">CreateUserRequest</span> request) {
+        <span class="kw">return</span> userService.<span class="fn">createUser</span>(request);
+    }
+
+    <span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="cl">HttpStatus</span>.NO_CONTENT)
+    <span class="kw">public void</span> <span class="fn">deleteUser</span>(<span class="an">@PathVariable</span> <span class="cl">Long</span> id) {
+        userService.<span class="fn">deleteUser</span>(id);
+    }
+}</pre></div></div>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Service Layer</span></div>
+      <div class="code-body"><pre><span class="an">@Service</span>
+<span class="kw">public class</span> <span class="cl">UserService</span> {
+
+    <span class="kw">private final</span> <span class="cl">UserRepository</span> userRepository;
+
+    <span class="kw">public</span> <span class="fn">UserService</span>(<span class="cl">UserRepository</span> userRepository) {
+        <span class="kw">this</span>.userRepository = userRepository;
+    }
+
+    <span class="kw">public</span> <span class="cl">List</span>&lt;<span class="cl">UserDTO</span>&gt; <span class="fn">getAllUsers</span>() {
+        <span class="kw">return</span> userRepository.<span class="fn">findAll</span>()
+            .<span class="fn">stream</span>()
+            .<span class="fn">map</span>(<span class="kw">this</span>::<span class="fn">toDTO</span>)  <span class="cm">// convert to DTO</span>
+            .<span class="fn">collect</span>(<span class="cl">Collectors</span>.<span class="fn">toList</span>());
+    }
+
+    <span class="kw">public</span> <span class="cl">UserDTO</span> <span class="fn">getUserById</span>(<span class="cl">Long</span> id) {
+        <span class="cl">User</span> user = userRepository.<span class="fn">findById</span>(id)
+            .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="cl">UserNotFoundException</span>(<span class="st">"User not found: "</span> + id));
+        <span class="kw">return</span> <span class="fn">toDTO</span>(user);
+    }
+
+    <span class="kw">public</span> <span class="cl">UserDTO</span> <span class="fn">createUser</span>(<span class="cl">CreateUserRequest</span> request) {
+        <span class="cl">User</span> user = <span class="kw">new</span> <span class="cl">User</span>();
+        user.<span class="fn">setName</span>(request.<span class="fn">getName</span>());
+        user.<span class="fn">setEmail</span>(request.<span class="fn">getEmail</span>());
+        <span class="kw">return</span> <span class="fn">toDTO</span>(userRepository.<span class="fn">save</span>(user));
+    }
+
+    <span class="kw">private</span> <span class="cl">UserDTO</span> <span class="fn">toDTO</span>(<span class="cl">User</span> user) {
+        <span class="kw">return new</span> <span class="cl">UserDTO</span>(user.<span class="fn">getId</span>(), user.<span class="fn">getName</span>(), user.<span class="fn">getEmail</span>());
+    }
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">What is a DTO?</div>
+    <div class="info-box yellow">⚠️ <strong>Never expose your @Entity directly in API responses.</strong> A DTO (Data Transfer Object) controls exactly what data leaves your API — hiding passwords, internal IDs, sensitive fields.</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">DTO</span></div>
+      <div class="code-body"><pre><span class="cm">// What you expose to the client (safe)</span>
+<span class="kw">public record</span> <span class="cl">UserDTO</span>(<span class="cl">Long</span> id, <span class="cl">String</span> name, <span class="cl">String</span> email) {}
+
+<span class="cm">// What client sends to create a user</span>
+<span class="kw">public record</span> <span class="cl">CreateUserRequest</span>(
+    <span class="an">@NotBlank</span> <span class="cl">String</span> name,
+    <span class="an">@Email</span> <span class="cl">String</span> email
+) {}</pre></div></div>
+  </div>
+`,
+  quiz:{q:'Where should business logic live in a layered Spring Boot app?',opts:['In the Controller','In the Entity','In the Service','In the Repository'],ans:2,exp:'The Service layer owns all business logic. The Controller just handles HTTP and delegates to the Service. The Repository only does database access.'}
+},
+
+{
+  id:'spring-security',
+  phase:'Phase 3 — Intermediate',
+  phaseColor:'#3b82f6',
+  title:'Security & Error Handling',
+  subtitle:'Protect your API with JWT and return professional error responses.',
+  html:`
+  <div class="section">
+    <div class="section-title">Global Error Handling with @ControllerAdvice</div>
+    <div class="info-box">🛡️ Without this, Spring returns ugly default error pages. With @ControllerAdvice you control every error response in one place.</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="an">@ControllerAdvice</span>
+<span class="kw">public class</span> <span class="cl">GlobalExceptionHandler</span> {
+
+    <span class="an">@ExceptionHandler</span>(<span class="cl">UserNotFoundException</span>.class)
+    <span class="an">@ResponseStatus</span>(<span class="cl">HttpStatus</span>.NOT_FOUND)
+    <span class="kw">public</span> <span class="cl">ErrorResponse</span> <span class="fn">handleUserNotFound</span>(<span class="cl">UserNotFoundException</span> ex) {
+        <span class="kw">return new</span> <span class="cl">ErrorResponse</span>(<span class="st">"USER_NOT_FOUND"</span>, ex.<span class="fn">getMessage</span>());
+    }
+
+    <span class="an">@ExceptionHandler</span>(<span class="cl">MethodArgumentNotValidException</span>.class)
+    <span class="an">@ResponseStatus</span>(<span class="cl">HttpStatus</span>.BAD_REQUEST)
+    <span class="kw">public</span> <span class="cl">ErrorResponse</span> <span class="fn">handleValidation</span>(<span class="cl">MethodArgumentNotValidException</span> ex) {
+        <span class="cl">String</span> message = ex.<span class="fn">getBindingResult</span>()
+            .<span class="fn">getFieldErrors</span>().<span class="fn">stream</span>()
+            .<span class="fn">map</span>(e -> e.<span class="fn">getField</span>() + <span class="st">": "</span> + e.<span class="fn">getDefaultMessage</span>())
+            .<span class="fn">collect</span>(<span class="cl">Collectors</span>.<span class="fn">joining</span>(<span class="st">", "</span>));
+        <span class="kw">return new</span> <span class="cl">ErrorResponse</span>(<span class="st">"VALIDATION_ERROR"</span>, message);
+    }
+}
+
+<span class="cm">// Clean error response body</span>
+<span class="kw">public record</span> <span class="cl">ErrorResponse</span>(<span class="cl">String</span> code, <span class="cl">String</span> message) {}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Input Validation</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Java</span></div>
+      <div class="code-body"><pre><span class="kw">public record</span> <span class="cl">CreateUserRequest</span>(
+    <span class="an">@NotBlank</span>(message = <span class="st">"Name is required"</span>)
+    <span class="an">@Size</span>(min = <span class="nm">2</span>, max = <span class="nm">50</span>)
+    <span class="cl">String</span> name,
+
+    <span class="an">@Email</span>(message = <span class="st">"Must be a valid email"</span>)
+    <span class="an">@NotBlank</span>
+    <span class="cl">String</span> email,
+
+    <span class="an">@Min</span>(<span class="nm">18</span>) <span class="an">@Max</span>(<span class="nm">120</span>)
+    <span class="kw">int</span> age
+) {}
+
+<span class="cm">// In controller, add @Valid to trigger validation:</span>
+<span class="an">@PostMapping</span>
+<span class="kw">public</span> <span class="cl">UserDTO</span> <span class="fn">create</span>(<span class="an">@RequestBody</span> <span class="an">@Valid</span> <span class="cl">CreateUserRequest</span> req) { ... }</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Spring Security + JWT Flow</div>
+    <div class="card-grid">
+      <div class="card"><div class="card-title">1. User logs in</div><div class="card-body">POST /auth/login with username & password</div></div>
+      <div class="card"><div class="card-title">2. Server verifies</div><div class="card-body">Checks credentials in database</div></div>
+      <div class="card"><div class="card-title">3. Return JWT token</div><div class="card-body">Server sends back a signed token (valid 24h)</div></div>
+      <div class="card"><div class="card-title">4. Client uses token</div><div class="card-body">Every request sends: Authorization: Bearer &lt;token&gt;</div></div>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Security Config</span></div>
+      <div class="code-body"><pre><span class="an">@Configuration</span>
+<span class="an">@EnableWebSecurity</span>
+<span class="kw">public class</span> <span class="cl">SecurityConfig</span> {
+
+    <span class="an">@Bean</span>
+    <span class="kw">public</span> <span class="cl">SecurityFilterChain</span> <span class="fn">filterChain</span>(<span class="cl">HttpSecurity</span> http) <span class="kw">throws</span> <span class="cl">Exception</span> {
+        http
+            .<span class="fn">csrf</span>(csrf -> csrf.<span class="fn">disable</span>())
+            .<span class="fn">authorizeHttpRequests</span>(auth -> auth
+                .<span class="fn">requestMatchers</span>(<span class="st">"/api/auth/**"</span>).<span class="fn">permitAll</span>() <span class="cm">// public</span>
+                .<span class="fn">anyRequest</span>().<span class="fn">authenticated</span>()             <span class="cm">// rest = need token</span>
+            )
+            .<span class="fn">sessionManagement</span>(s -> s
+                .<span class="fn">sessionCreationPolicy</span>(<span class="cl">SessionCreationPolicy</span>.STATELESS)
+            )
+            .<span class="fn">addFilterBefore</span>(jwtFilter, <span class="cl">UsernamePasswordAuthenticationFilter</span>.class);
+        <span class="kw">return</span> http.<span class="fn">build</span>();
+    }
+}</pre></div></div>
+  </div>
+`,
+  quiz:{q:'What annotation catches exceptions globally across all controllers?',opts:['@ExceptionHandler','@ControllerAdvice','@GlobalHandler','@RestController'],ans:1,exp:'@ControllerAdvice marks a class as a global exception handler. Methods inside it with @ExceptionHandler catch specific exceptions from all controllers.'}
+},
+
+{
+  id:'spring-testing',
+  phase:'Phase 3 — Intermediate',
+  phaseColor:'#3b82f6',
+  title:'Testing Spring Boot Apps',
+  subtitle:'Write unit tests and integration tests like a senior developer.',
+  html:`
+  <div class="section">
+    <div class="section-title">Testing Pyramid</div>
+    <div class="card-grid">
+      <div class="card"><div class="card-title" style="color:#10b981">Unit Tests</div><div class="card-body">Test one class in isolation. Fast. Mock dependencies with Mockito. Most tests should be here.</div></div>
+      <div class="card"><div class="card-title" style="color:#3b82f6">Integration Tests</div><div class="card-body">Test multiple layers together. Uses real database (H2). @SpringBootTest.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Unit Test — Service Layer</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">JUnit + Mockito</span></div>
+      <div class="code-body"><pre><span class="an">@ExtendWith</span>(<span class="cl">MockitoExtension</span>.class)
+<span class="kw">class</span> <span class="cl">UserServiceTest</span> {
+
+    <span class="an">@Mock</span>
+    <span class="kw">private</span> <span class="cl">UserRepository</span> userRepository; <span class="cm">// fake repository</span>
+
+    <span class="an">@InjectMocks</span>
+    <span class="kw">private</span> <span class="cl">UserService</span> userService;       <span class="cm">// real service</span>
+
+    <span class="an">@Test</span>
+    <span class="kw">void</span> <span class="fn">shouldReturnUser_WhenUserExists</span>() {
+        <span class="cm">// GIVEN — set up fake behavior</span>
+        <span class="cl">User</span> user = <span class="kw">new</span> <span class="cl">User</span>(<span class="nm">1L</span>, <span class="st">"Ali"</span>, <span class="st">"ali@email.com"</span>);
+        <span class="cl">Mockito</span>.<span class="fn">when</span>(userRepository.<span class="fn">findById</span>(<span class="nm">1L</span>))
+               .<span class="fn">thenReturn</span>(<span class="cl">Optional</span>.<span class="fn">of</span>(user));
+
+        <span class="cm">// WHEN — call the method</span>
+        <span class="cl">UserDTO</span> result = userService.<span class="fn">getUserById</span>(<span class="nm">1L</span>);
+
+        <span class="cm">// THEN — assert the result</span>
+        <span class="cl">Assertions</span>.<span class="fn">assertEquals</span>(<span class="st">"Ali"</span>, result.<span class="fn">name</span>());
+        <span class="cl">Assertions</span>.<span class="fn">assertEquals</span>(<span class="st">"ali@email.com"</span>, result.<span class="fn">email</span>());
+    }
+
+    <span class="an">@Test</span>
+    <span class="kw">void</span> <span class="fn">shouldThrow_WhenUserNotFound</span>() {
+        <span class="cl">Mockito</span>.<span class="fn">when</span>(userRepository.<span class="fn">findById</span>(<span class="nm">99L</span>))
+               .<span class="fn">thenReturn</span>(<span class="cl">Optional</span>.<span class="fn">empty</span>());
+
+        <span class="cl">Assertions</span>.<span class="fn">assertThrows</span>(
+            <span class="cl">UserNotFoundException</span>.class,
+            () -> userService.<span class="fn">getUserById</span>(<span class="nm">99L</span>)
+        );
+    }
+}</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Integration Test — Controller</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">MockMvc</span></div>
+      <div class="code-body"><pre><span class="an">@SpringBootTest</span>
+<span class="an">@AutoConfigureMockMvc</span>
+<span class="kw">class</span> <span class="cl">UserControllerTest</span> {
+
+    <span class="an">@Autowired</span>
+    <span class="kw">private</span> <span class="cl">MockMvc</span> mockMvc;
+
+    <span class="an">@Test</span>
+    <span class="kw">void</span> <span class="fn">getAllUsers_Returns200</span>() <span class="kw">throws</span> <span class="cl">Exception</span> {
+        mockMvc.<span class="fn">perform</span>(<span class="fn">get</span>(<span class="st">"/api/users"</span>))
+            .<span class="fn">andExpect</span>(<span class="fn">status</span>().<span class="fn">isOk</span>())
+            .<span class="fn">andExpect</span>(<span class="fn">jsonPath</span>(<span class="st">"$"</span>).<span class="fn">isArray</span>());
+    }
+
+    <span class="an">@Test</span>
+    <span class="kw">void</span> <span class="fn">createUser_Returns201</span>() <span class="kw">throws</span> <span class="cl">Exception</span> {
+        <span class="cl">String</span> json = <span class="st">"""
+            {"name": "Ali", "email": "ali@test.com", "age": 25}
+            """</span>;
+        mockMvc.<span class="fn">perform</span>(<span class="fn">post</span>(<span class="st">"/api/users"</span>)
+            .<span class="fn">contentType</span>(<span class="cl">MediaType</span>.APPLICATION_JSON)
+            .<span class="fn">content</span>(json))
+            .<span class="fn">andExpect</span>(<span class="fn">status</span>().<span class="fn">isCreated</span>());
+    }
+}</pre></div></div>
+  </div>
+`,
+  quiz:{q:'What does Mockito @Mock do?',opts:['Creates a real instance of a class','Creates a fake (mocked) instance that you control','Runs a test method','Injects dependencies automatically'],ans:1,exp:'@Mock creates a fake (mock) object. You control its behavior using when(...).thenReturn(...). This lets you test your class in isolation without needing a real database.'}
+},
+
+{
+  id:'projects',
+  phase:'Phase 4 — Projects',
+  phaseColor:'#ec4899',
+  title:'Real Projects for Your Portfolio',
+  subtitle:'Build these 4 projects to become job-ready. Each one teaches specific skills.',
+  html:`
+  <div class="section">
+    <div class="section-title">Why Projects Matter</div>
+    <div class="info-box">💼 <strong>Employers hire based on what you've built, not just what you've studied.</strong> These 4 projects cover everything you need. Put them on GitHub. Explain them in interviews.</div>
+  </div>
+
+  <div class="project">
+    <div class="project-tag">Project 1 — Beginner</div>
+    <div class="project-title">Todo REST API</div>
+    <div class="project-desc">A full CRUD API for managing todos. Simple but covers all fundamentals.</div>
+    <ul class="project-steps">
+      <li>Create Todo entity: id, title, description, completed, createdAt</li>
+      <li>Build CRUD endpoints: GET /todos, POST /todos, PUT /todos/{id}, DELETE /todos/{id}</li>
+      <li>Add validation: title cannot be blank</li>
+      <li>Use H2 database. Test with Postman or curl</li>
+      <li>Skills: Entity, Repository, Service, Controller, DTOs</li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <div class="project-tag">Project 2 — Intermediate</div>
+    <div class="project-title">User Authentication System</div>
+    <div class="project-desc">JWT-based login/register system. The foundation of any real app.</div>
+    <ul class="project-steps">
+      <li>POST /auth/register — create user, hash password with BCrypt</li>
+      <li>POST /auth/login — verify credentials, return JWT token</li>
+      <li>Protect endpoints with Spring Security</li>
+      <li>Add roles: ROLE_USER, ROLE_ADMIN</li>
+      <li>Skills: Spring Security, JWT, BCrypt, roles</li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <div class="project-tag">Project 3 — Intermediate</div>
+    <div class="project-title">E-Commerce Backend API</div>
+    <div class="project-desc">Products, orders, users — a real-world multi-entity application.</div>
+    <ul class="project-steps">
+      <li>Entities: User, Product, Order, OrderItem</li>
+      <li>Relationships: User has many Orders, Order has many OrderItems</li>
+      <li>Endpoints: browse products, place order, view order history</li>
+      <li>Add pagination: GET /products?page=0&size=10</li>
+      <li>Skills: JPA relationships, pagination, complex queries</li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <div class="project-tag">Project 4 — Advanced</div>
+    <div class="project-title">Blog API with Docker</div>
+    <div class="project-desc">Full-featured blog backend, containerized and ready to deploy.</div>
+    <ul class="project-steps">
+      <li>Posts, Comments, Tags, Authors with full relationships</li>
+      <li>Search: GET /posts?search=java&tag=backend</li>
+      <li>Write full unit + integration test suite</li>
+      <li>Dockerize: write Dockerfile + docker-compose.yml</li>
+      <li>Deploy to Railway or Render (free hosting)</li>
+      <li>Skills: Docker, testing, search, deployment, real URL</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Dockerfile Template</div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot" style="background:#ef4444"></div><div class="code-dot" style="background:#f59e0b"></div><div class="code-dot" style="background:#10b981"></div></div><span class="code-lang">Dockerfile</span></div>
+      <div class="code-body"><pre><span class="cm"># Build stage</span>
+<span class="kw">FROM</span> maven:<span class="nm">3.9-eclipse-temurin-21</span> <span class="kw">AS</span> build
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> pom.xml .
+<span class="kw">COPY</span> src ./src
+<span class="kw">RUN</span> mvn clean package -DskipTests
+
+<span class="cm"># Run stage</span>
+<span class="kw">FROM</span> eclipse-temurin:<span class="nm">21-jre</span>
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> --from=build /app/target/*.jar app.jar
+<span class="kw">EXPOSE</span> <span class="nm">8080</span>
+<span class="kw">ENTRYPOINT</span> [<span class="st">"java"</span>, <span class="st">"-jar"</span>, <span class="st">"app.jar"</span>]</pre></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Interview Preparation</div>
+    <div class="table-wrap"><table>
+      <tr><th>Question</th><th>Key Answer</th></tr>
+      <tr><td>What is dependency injection?</td><td>Spring creates and injects objects for you (IoC)</td></tr>
+      <tr><td>Difference between @Component, @Service, @Repository?</td><td>All are Spring beans. @Service & @Repository add meaning/behavior</td></tr>
+      <tr><td>What is the difference between PUT and PATCH?</td><td>PUT replaces the whole resource, PATCH updates partial fields</td></tr>
+      <tr><td>How does Spring Security work?</td><td>Filter chain intercepts requests, checks authentication before hitting controller</td></tr>
+      <tr><td>What is N+1 problem in JPA?</td><td>Loading a list then querying DB for each item. Fix: use JOIN FETCH or @EntityGraph</td></tr>
+      <tr><td>How do you handle transactions?</td><td>@Transactional on service methods — all DB ops succeed or all rollback</td></tr>
+    </table></div>
+  </div>
+`,
+  quiz:{q:'What should you use to hash passwords before storing them?',opts:['MD5','Base64','BCrypt','SHA-1'],ans:2,exp:'BCrypt is the standard for hashing passwords in Spring Boot apps. It\'s slow by design (prevents brute force) and includes a salt automatically. Never store plain text passwords.'}
+}
+];
+
+// ---- Build sidebar nav ----
+const navList = document.getElementById('nav-list');
+const lessonsContainer = document.getElementById('lessons-container');
+let completed = new Set();
+let current = -1; // -1 = home
+
+const phases = [...new Set(LESSONS.map(l=>l.phase))];
+
+phases.forEach(phase=>{
+  const label = document.createElement('div');
+  label.className='phase-label';
+  label.textContent = phase;
+  navList.appendChild(label);
+  LESSONS.forEach((l,i)=>{
+    if(l.phase!==phase)return;
+    const item = document.createElement('div');
+    item.className='nav-item';
+    item.id='nav-'+i;
+    item.innerHTML=`<div class="nav-check" id="check-${i}">${i+1}</div><span>${l.title}</span>`;
+    item.onclick=()=>goTo(i);
+    navList.appendChild(item);
+  });
+});
+
+// ---- Build lesson pages ----
+LESSONS.forEach((l,i)=>{
+  const page = document.createElement('div');
+  page.className='lesson-page';
+  page.id='lesson-'+i;
+  const q=l.quiz;
+  const opts=q.opts.map((o,oi)=>`<div class="quiz-opt" id="qopt-${i}-${oi}" onclick="answerQuiz(${i},${oi})">${o}</div>`).join('');
+  page.innerHTML=`
+  <div class="content">
+    <div class="lesson-header">
+      <div class="phase-tag" style="background:${l.phaseColor}18;color:${l.phaseColor};border:1px solid ${l.phaseColor}30">${l.phase}</div>
+      <div class="lesson-title">${l.title}</div>
+      <div class="lesson-subtitle">${l.subtitle}</div>
+    </div>
+    ${l.html}
+    <div class="section">
+      <div class="section-title">Quick Check</div>
+      <div class="quiz">
+        <div class="quiz-title">📝 Quiz</div>
+        <div class="quiz-q">${q.q}</div>
+        <div class="quiz-options">${opts}</div>
+        <div class="quiz-feedback" id="qfb-${i}"></div>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <button class="btn btn-secondary" onclick="goTo(${i-1})" ${i===0?'disabled':''}>← Previous</button>
+      <button class="btn btn-primary" id="nextbtn-${i}" onclick="goTo(${i+1})" ${i===LESSONS.length-1?'disabled':''}>Next Lesson →</button>
+    </div>
+  </div>`;
+  lessonsContainer.appendChild(page);
+});
+
+function goTo(idx){
+  // hide all
+  document.getElementById('home-page').style.display='none';
+  document.querySelectorAll('.lesson-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('main').scrollTo(0,0);
+
+  if(idx<0||idx===undefined){
+    document.getElementById('home-page').style.display='block';
+    current=-1;
+    return;
+  }
+  if(idx>=LESSONS.length)return;
+  current=idx;
+  document.getElementById('lesson-'+idx).classList.add('active');
+  document.getElementById('nav-'+idx).classList.add('active');
+  updateProgress();
+}
+
+function answerQuiz(li, oi){
+  const q = LESSONS[li].quiz;
+  const opts = document.querySelectorAll(`[id^="qopt-${li}-"]`);
+  opts.forEach(o=>o.classList.add('disabled'));
+  const fb = document.getElementById('qfb-'+li);
+  if(oi===q.ans){
+    opts[oi].classList.add('correct');
+    fb.className='quiz-feedback show ok';
+    fb.innerHTML='✅ Correct! '+q.exp;
+    if(!completed.has(li)){
+      completed.add(li);
+      document.getElementById('check-'+li).textContent='✓';
+      document.getElementById('nav-'+li).classList.add('done');
+      updateProgress();
+    }
+  } else {
+    opts[oi].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    fb.className='quiz-feedback show fail';
+    fb.innerHTML='❌ Not quite. '+q.exp;
+  }
+}
+
+function updateProgress(){
+  const pct = Math.round((completed.size/LESSONS.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+// Start on home
+goTo(-1);
+</script>
+</body>
+</html>
